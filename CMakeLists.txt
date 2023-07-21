@@ -34,25 +34,39 @@ else()
 endif()
 # 结束对编译器类型的判断
 
-
+# 在CMake的输出中打印一个状态信息，显示"CMAKE_CXX_FLAGS"的当前值。CMAKE_CXX_FLAGS是一个变量，用于存放C++的编译选项。
 message(STATUS "CMAKE_CXX_FLAGS" ${CMAKE_CXX_FLAGS})
-set(FASTLLM_CXX_SOURCES src/fastllm.cpp src/device.cpp src/model.cpp src/executor.cpp
-        src/devices/cpu/cpudevice.cpp src/devices/cpu/cpudevicebatch.cpp
-        src/models/chatglm.cpp src/models/moss.cpp src/models/llama.cpp src/models/basellm.cpp)
 
+# 创建一个名为FASTLLM_CXX_SOURCES的变量，并设置其值为一系列的.cpp源文件的路径。
+set(FASTLLM_CXX_SOURCES src/fastllm.cpp src/device.cpp src/model.cpp src/executor.cpp src/devices/cpu/cpudevice.cpp src/devices/cpu/cpudevicebatch.cpp src/models/chatglm.cpp src/models/moss.cpp src/models/llama.cpp src/models/basellm.cpp)
+
+# 添加一些目录到编译器的包含路径中。编译器在寻找头文件时会查找这些路径。
 include_directories(include)
 include_directories(include/utils)
 include_directories(include/models)
 
+# 开始一个判断块，判断USE_CUDA的值是否为真。如果为真，那么执行后面的代码块。
 if (USE_CUDA)
+
+    # 启用CUDA语言支持。
     enable_language(CUDA)
+
+    # 添加一个编译定义，其名称为USE_CUDA。
     add_compile_definitions(USE_CUDA)
+
+    # 向编译器的包含路径中添加一个新的目录。
     include_directories(include/devices/cuda)
-    #message(${CMAKE_CUDA_IMPLICIT_LINK_DIRECTORIES})
+
+    # 创建一个名为FASTLLM_CUDA_SOURCES的变量，并设置其值为一些CUDA源文件的路径。
     set(FASTLLM_CUDA_SOURCES src/devices/cuda/cudadevice.cpp src/devices/cuda/cudadevicebatch.cpp src/devices/cuda/fastllm-cuda.cu)
+
+    # 将cublas库添加到FASTLLM_LINKED_LIBS变量中，这个变量可能用于后面的目标链接库。
     set(FASTLLM_LINKED_LIBS ${FASTLLM_LINKED_LIBS} cublas)
+
+    # 设置CUDA架构为"native"，这意味着生成的CUDA二进制代码将针对运行CMake时所在的GPU架构进行优化。
     set(CMAKE_CUDA_ARCHITECTURES "native")
-endif()
+endif() # 结束了之前的if判断块。
+
 
 if (PY_API)
     set(PYBIND third_party/pybind11)
