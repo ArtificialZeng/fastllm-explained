@@ -1,5 +1,5 @@
 # fastllm-explained
-Code largely borrowed form https://github.com/ztxz16/fastllm,but get carefully explained.  
+Code largely borrowed form https://github.com/ztxz16/fastllm,  but get carefully explained.  
 
 [CMakeLists.txt](./CMakeLists.txt)
 ```
